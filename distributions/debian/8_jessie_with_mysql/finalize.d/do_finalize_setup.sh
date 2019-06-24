@@ -1,0 +1,1 @@
+../../../../finalize.d/do_finalize_setup.sh

@@ -1,0 +1,1 @@
+../../../../finalize.d/finalize_setup__99__show-summary.sh
