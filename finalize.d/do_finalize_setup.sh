@@ -2,8 +2,8 @@
 
 set -e
 
-BASEDIR=$(dirname $0)
-cd $BASEDIR
+BASEDIR=$(dirname "$0")
+cd "$BASEDIR"
 
 DEFAULTS="defaults_finalize.inc.sh"
 if [ -f "$DEFAULTS" ] ; then
@@ -13,12 +13,12 @@ fi
 for SCRIPT in finalize_setup__*.sh ; do
 	# make sure to return to the base dir every time, no matter what the
 	# sourced script has been doing inbetween:
-	cd $BASEDIR
+	cd "$BASEDIR"
 	echo "-----------------------------------------------"
 	echo "[$SCRIPT]"
 	echo "-----------------------------------------------"
 	set -x
-	source $SCRIPT
+	source "$SCRIPT"
 	set +x
-	echo -e "\n"
+	echo -e "\\n"
 done

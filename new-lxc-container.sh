@@ -11,7 +11,7 @@ usage_exit() {
     echo
     echo "    e.g.: $0 mysql_deb8 debian 8_jessie"
     echo
-    exit $1
+    exit "$1"
 }
 
 if [ -z "$1" ] ; then
@@ -37,7 +37,7 @@ if [ "$4" == "--dry-run" ] ; then
 fi
 
 
-cd $(dirname $0)
+cd "$(dirname "$0")"
 SETUP_SCRIPTS="distributions/$DISTRIBUTION/$SUITE"
 if ! [ -d "$SETUP_SCRIPTS" ] ; then
     echo "ERROR: can't find directory [$SETUP_SCRIPTS]!"
@@ -52,7 +52,7 @@ fi
 
 LOCALPKGS="$(readlink settings/localpkgs)/$DISTRIBUTION/$SUITE"
 if [ -n "$LOCALPKGS" ] ; then
-    echo LOCALPKGS=$LOCALPKGS
+    echo LOCALPKGS="$LOCALPKGS"
     export LOCALPKGS
 else
     echo "WARNING: no 'settings/localpkgs' found, network connection required!"
@@ -60,7 +60,7 @@ fi
 
 LXCPATH="$(readlink settings/lxcpath)"
 if [ -n "$LXCPATH" ] ; then
-    echo LXCPATH=$LXCPATH
+    echo LXCPATH="$LXCPATH"
     export LXCPATH
 else
     echo "WARNING: no 'settings/lxcpath' found, using LXC default!"
@@ -68,9 +68,9 @@ fi
 
 
 RUN_SCRIPT="$SETUP_SCRIPTS/lxc-create-base.sh"
-echo -e "----------------------------------\nLaunching [$RUN_SCRIPT]"
-bash $RUN_SCRIPT $VM_HOSTNAME $AUTH_KEYS
-echo -e "----------------------------------\nFinished [$RUN_SCRIPT]"
+echo -e "----------------------------------\\nLaunching [$RUN_SCRIPT]"
+bash "$RUN_SCRIPT" "$VM_HOSTNAME" "$AUTH_KEYS"
+echo -e "----------------------------------\\nFinished [$RUN_SCRIPT]"
 echo "----------------------------------"
 echo
 echo "Use the following commands to start it and/or check its status:"
