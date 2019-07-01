@@ -75,9 +75,14 @@ bash "$RUN_SCRIPT" "$VM_HOSTNAME" "$AUTH_KEYS"
 echo -e "----------------------------------\\nFinished [$RUN_SCRIPT]"
 echo "----------------------------------"
 echo
+
+if [ -n "$SUDO_USER" ] ; then
+    SUDO_PREFIX="sudo "
+fi
+
 echo "Use the following commands to start it and/or check its status:"
-echo "  # lxc-start --lxcpath=$LXCPATH --name=$VM_HOSTNAME -d"
-echo "  # lxc-attach --lxcpath=$LXCPATH --name=$VM_HOSTNAME"
-echo "  # lxc-ls --lxcpath=$LXCPATH --fancy"
-echo "  # IPV4=\$(lxc-ls --lxcpath=$LXCPATH --filter=$VM_HOSTNAME --fancy-format=IPV4 --fancy | tail -n 1)"
+echo "  # ${SUDO_PREFIX}lxc-start --lxcpath=$LXCPATH --name=$VM_HOSTNAME -d"
+echo "  # ${SUDO_PREFIX}lxc-attach --lxcpath=$LXCPATH --name=$VM_HOSTNAME"
+echo "  # ${SUDO_PREFIX}lxc-ls --lxcpath=$LXCPATH --fancy"
+echo "  # IPV4=\$(${SUDO_PREFIX}lxc-ls --lxcpath=$LXCPATH --filter=$VM_HOSTNAME --fancy-format=IPV4 --fancy | tail -n 1)"
 echo "  # ssh -i ${AUTH_KEYS/.pub/}  root@\$IPV4"
