@@ -55,7 +55,9 @@ if [ -n "$LOCALPKGS" ] ; then
     echo LOCALPKGS="$LOCALPKGS"
     export LOCALPKGS
 else
+    echo "===================================================================="
     echo "WARNING: no 'settings/localpkgs' found, network connection required!"
+    echo "===================================================================="
 fi
 
 LXCPATH="$(readlink settings/lxcpath)"
