@@ -2,4 +2,123 @@
 
 Scripts and stuff to automatically create [LXC containers][lxc] in various flavours.
 
+## Design
+
+The repository is a collection of modular scripts ("*scriptlets*"), each doing just
+*one* small task. They can be combined to form a configuration for a container using the
+`distributions/` directory with the corresponding sub-directories by using symbolic
+links to point to the scriptlets that should be run during setup. A minimal setup could
+look like this:
+
+```text
+distributions/
+└── debian
+    ├── 8_jessie
+    │   ├── debian_defaults.inc.sh -> ../debian_defaults.inc.sh
+    │   ├── lxc-create-base.sh -> ../lxc-create-base__8_jessie.sh
+    │   ├── lxc-create.d
+    │   │   ├── 00_parse-cmdline.inc.sh -> ../../../../lxc-create.d/parse-cmdline.inc.sh
+    │   │   ├── 01_set-common-vars.inc.sh -> ../../../../lxc-create.d/set-common-vars.inc.sh
+    │   │   ├── 02_check-host-ubu1810.inc.sh -> ../../../../lxc-create.d/check-host-ubu1904.inc.sh
+    │   │   └── 03_set-vars-deb8.inc.sh -> ../../../../lxc-create.d/set-vars-deb8.inc.sh
+    │   └── lxc-post-create.d
+    │       ├── 00_configure-sources-list.inc.sh -> ../../../../lxc-post-create.d/configure-sources-list.inc.sh
+    │       ├── 01_configure-apt-cacher-proxy.inc.sh -> ../../../../lxc-post-create.d/configure-apt-cacher-proxy.inc.sh
+    │       ├── 02_prepare-apt.inc.sh -> ../../../../lxc-post-create.d/prepare-apt.inc.sh
+    │       ├── 03_install-eatmydata.inc.sh -> ../../../../lxc-post-create.d/install-eatmydata.inc.sh
+    │       ├── 04_configure-etc-hosts.inc.sh -> ../../../../lxc-post-create.d/configure-etc-hosts.inc.sh
+    │       ├── 05_configure-ssh.inc.sh -> ../../../../lxc-post-create.d/configure-ssh.inc.sh
+    │       ├── 06_configure-locales.inc.sh -> ../../../../lxc-post-create.d/configure-locales.inc.sh
+    │       ├── 07_configure-service-startup-disable.inc.sh -> ../../../../lxc-post-create.d/configure-service-startup-disable.inc.sh
+    │       ├── 08_install-default-packages.inc.sh -> ../../../../lxc-post-create.d/install-default-packages.inc.sh
+    │       └── 99_configure-service-startup-enable.inc.sh -> ../../../../lxc-post-create.d/configure-service-startup-enable.inc.sh
+    ├── debian_defaults.inc.sh
+    └── lxc-create-base__8_jessie.sh
+```
+
+## Preparations / Prerequisites
+
+It is strongly recommended to set up [apt-cacher-ng][acng] on the LXC host to speed up
+(subsequent) installations of containers. If done, make sure to use the
+[configure-apt-cacher-proxy.inc.sh](lxc-post-create.d/configure-apt-cacher-proxy.inc.sh)
+scriptlet during container setup.
+
+## Settings
+
+A few common settings are configured by placing symlinks in the `settings/` directory.
+
+### SSH Keys
+
+Create a symlink to an ssh public key or `authorized_keys` file:
+
+```bash
+cd settings/
+ln -s $HOME/.ssh/id_rsa.pub authorized_keys
+cd -
+```
+
+### LXC Path
+
+Instead of setting the **`LXCPATH`** environment variable (which is of course supported
+as well), you can create a symlink called `lxcpath` like so:
+
+```bash
+cd settings/
+ln -s /scratch/containers lxcpath
+cd -
+```
+
+### Local Package Cache
+
+In addition to using Apt-Cacher-NG it is also supported to use a local package cache
+that will be copied into the container by the [prepare-apt.inc.sh](lxc-post-create.d/prepare-apt.inc.sh)
+scriptlet. To enable it, create a symlink called `localpkgs` poining to a location
+containing a subdirectory **`lists`** with APT list files (like `/var/lib/apt/lists/`)
+and a subdirectory **`archives`** containing (some of) the corresponding `.deb` files
+(like `/var/cache/apt/archives/`).
+
+#### Preparations
+
+Building up the cache can be done by setting up an LXC container without cache (the
+scriptlet mentioned above will automatically do this) and then copy the relevant files
+to the desired cache location on the host system, for example:
+
+```bash
+sudo -s -H  # not necessary, but allows for tab-completing into the container filesystem
+CACHE_BASE=/scratch/cache/localpkgs/debian/8_jessie
+CONTAINER_FS=/scratch/containers/vamp_deb8_mysql/rootfs
+
+mkdir -pv $CACHE_BASE/lists
+mkdir -pv $CACHE_BASE/archives
+cp -u $CONTAINER_FS/var/cache/apt/archives/*.deb $CACHE_BASE/archives/
+cp -u $CONTAINER_FS/var/lib/apt/lists/* $CACHE_BASE/lists/
+rm $CACHE_BASE/lists/lock
+```
+
+Updating the package cache can also be done through a running container of the relevant
+distribution / release. Just copy the existing archives there, update the APT lists and
+ask APT to remove outdated packages from the cache. Then discard the previous archives
+on the host system and copy (move) back the ones from the container:
+
+In the LXC container:
+
+```bash
+apt-get update
+apt-get autoclean
+```
+
+On the host system:
+
+```bash
+sudo -s -H  # not necessary, but allows for tab-completing into the container filesystem
+CACHE_BASE=/scratch/cache/localpkgs/debian/8_jessie
+CONTAINER_FS=/scratch/containers/vamp_deb8_mysql/rootfs
+rm $CACHE_BASE/archives/*.deb
+cp  $CONTAINER_FS/var/cache/apt/archives/*.deb $CACHE_BASE/archives/
+```
+
+The APT list files can be updated using the last two lines of the commands describing
+how to build up the cache initially.
+
 [lxc]: https://linuxcontainers.org/
+[acng]: https://wiki.debian.org/AptCacherNg
