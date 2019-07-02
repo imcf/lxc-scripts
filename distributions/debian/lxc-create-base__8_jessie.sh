@@ -72,10 +72,3 @@ if [ -d "$FINALIZE_D" ] ; then
     echo "  # bash $SETUP_SCRIPTS/do_finalize_setup.sh"
     echo
 fi
-
-
-#############################################################
-# finish
-#############################################################
-# clean up downloaded package cache:
-chroot "$TGT_ROOT" eatmydata apt-get clean
