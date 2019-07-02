@@ -57,7 +57,9 @@ fi
 echo AUTH_KEYS="$AUTH_KEYS"
 
 # read the global package cache symlink:
-LOCALPKGS="$(readlink settings/localpkgs)/$DISTRIBUTION/$SUITE"
+if [ -L "settings/localpkgs" ] ; then
+    LOCALPKGS="$(readlink settings/localpkgs)/$DISTRIBUTION/$SUITE"
+fi
 # check if there is a suite/configuration specific cache symlink:
 if [ -L "distributions/$DISTRIBUTION/$SUITE/settings/localpkgs" ] ; then
     LOCALPKGS="$(readlink distributions/"$DISTRIBUTION"/"$SUITE"/settings/localpkgs)"
