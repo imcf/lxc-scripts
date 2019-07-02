@@ -120,5 +120,40 @@ cp  $CONTAINER_FS/var/cache/apt/archives/*.deb $CACHE_BASE/archives/
 The APT list files can be updated using the last two lines of the commands describing
 how to build up the cache initially.
 
+#### Using The Package Cache
+
+This can either be done globally, using a symlink in the top-level `settings/` directory
+or per suite / configuration (the latter overriding the former in case both are
+present).
+
+Global setting for all configurations:
+
+```bash
+cd settings
+ln -s /scratch/cache/localpkgs
+cd -
+
+# the directory layout is expected to be this:
+tree -L 3 -d settings/localpkgs
+# settings/localpkgs
+# ├── centos
+# │   └── x86_64
+# │       ├── 6
+# │       └── 7
+# └── debian
+#     └── 8_jessie
+#         ├── archives
+#         └── lists
+```
+
+Using a suite-specific package cache, the symlink is expected to point to the directory
+containing the `archives` and `lists` directories directly (in case of Debian setups):
+
+```bash
+cd distributions/debian/8_jessie_with_mysql/settings
+ln -s /scratch/cache/localpkgs/debian/8_jessie localpkgs
+cd -
+```
+
 [lxc]: https://linuxcontainers.org/
 [acng]: https://wiki.debian.org/AptCacherNg

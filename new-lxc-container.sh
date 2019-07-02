@@ -50,7 +50,12 @@ if ! [ -r "$AUTH_KEYS" ] ; then
     usage_exit 4
 fi
 
+# read the global package cache symlink:
 LOCALPKGS="$(readlink settings/localpkgs)/$DISTRIBUTION/$SUITE"
+# check if there is a suite/configuration specific cache symlink:
+if [ -L "distributions/$DISTRIBUTION/$SUITE/settings/localpkgs" ] ; then
+    LOCALPKGS="$(readlink distributions/"$DISTRIBUTION"/"$SUITE"/settings/localpkgs)"
+fi
 if [ -n "$LOCALPKGS" ] ; then
     echo LOCALPKGS="$LOCALPKGS"
     export LOCALPKGS
