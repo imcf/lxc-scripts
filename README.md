@@ -123,7 +123,7 @@ On the host system:
 ```bash
 sudo -s -H  # only required for tab-completing into the container filesystem
 CACHE_BASE=/scratch/cache/localpkgs/debian/8_jessie
-CONTAINER_FS=/scratch/containers/vamp_deb8_mysql/rootfs
+CONTAINER_FS=/scratch/containers/test_deb8_vanilla_01/rootfs
 rm $CACHE_BASE/archives/*.deb
 cp $CONTAINER_FS/var/cache/apt/archives/*.deb $CACHE_BASE/archives/
 ```
