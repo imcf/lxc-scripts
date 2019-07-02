@@ -44,11 +44,17 @@ if ! [ -d "$SETUP_SCRIPTS" ] ; then
     usage_exit 3
 fi
 
+# read the global keys symlink:
 AUTH_KEYS="${AUTH_KEYS:-$(readlink settings/authorized_keys)}"
+# check if there is a suite/configuration specific keys symlink:
+if [ -L "distributions/$DISTRIBUTION/$SUITE/settings/authorized_keys" ] ; then
+    AUTH_KEYS="$(readlink distributions/"$DISTRIBUTION"/"$SUITE"/settings/authorized_keys)"
+fi
 if ! [ -r "$AUTH_KEYS" ] ; then
     echo "ERROR: can't find or read authorized keys file: $AUTH_KEYS"
     usage_exit 4
 fi
+echo AUTH_KEYS="$AUTH_KEYS"
 
 # read the global package cache symlink:
 LOCALPKGS="$(readlink settings/localpkgs)/$DISTRIBUTION/$SUITE"

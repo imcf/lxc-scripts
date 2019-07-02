@@ -57,6 +57,15 @@ ln -s $HOME/.ssh/id_rsa.pub authorized_keys
 cd -
 ```
 
+This can also be done on a configuration-specific level (having priority over the
+symlink described above):
+
+```bash
+cd distributions/debian/8_jessie_with_mysql/settings
+ln -s $HOME/.ssh/id_rsa-specialkey.pub authorized_keys
+cd -
+```
+
 ### LXC Path
 
 Instead of setting the **`LXCPATH`** environment variable (which is of course supported
