@@ -5,8 +5,8 @@ Scripts and stuff to automatically create [LXC containers][lxc] in various flavo
 ## Design
 
 The repository is a collection of modular scripts ("*scriptlets*"), each doing just
-*one* small task. They can be combined to form a configuration for a container using the
-`distributions/` directory with the corresponding sub-directories by using symbolic
+*one* small task. They can be combined to form a *configuration* for a container using
+the `distributions/` directory with the corresponding sub-directories by using symbolic
 links to point to the scriptlets that should be run during setup. A minimal setup could
 look like this:
 
@@ -81,7 +81,7 @@ cd -
 
 In addition to using Apt-Cacher-NG it is also supported to use a local package cache
 that will be copied into the container by the [prepare-apt.inc.sh](lxc-post-create.d/prepare-apt.inc.sh)
-scriptlet. To enable it, create a symlink called `localpkgs` poining to a location
+scriptlet. To enable it, create a symlink called `localpkgs` pointing to a location
 containing a subdirectory **`lists`** with APT list files (like `/var/lib/apt/lists/`)
 and a subdirectory **`archives`** containing (some of) the corresponding `.deb` files
 (like `/var/cache/apt/archives/`).
@@ -89,11 +89,13 @@ and a subdirectory **`archives`** containing (some of) the corresponding `.deb` 
 #### Preparations
 
 Building up the cache can be done by setting up an LXC container without cache (the
-scriptlet mentioned above will automatically do this) and then copy the relevant files
-to the desired cache location on the host system, for example:
+scriptlet mentioned above will automatically do this, but make sure to *disable* the
+[apt-get-clean.inc.sh](lxc-post-create.d/apt-get-clean.inc.sh) scriptlet when creating
+the container) and then copy the relevant files to the desired cache location on the
+host system, for example:
 
 ```bash
-sudo -s -H  # not necessary, but allows for tab-completing into the container filesystem
+sudo -s -H  # only required for tab-completing into the container filesystem
 CACHE_BASE=/scratch/cache/localpkgs/debian/8_jessie
 CONTAINER_FS=/scratch/containers/vamp_deb8_mysql/rootfs
 
@@ -105,9 +107,9 @@ rm $CACHE_BASE/lists/lock
 ```
 
 Updating the package cache can also be done through a running container of the relevant
-distribution / release. Just copy the existing archives there, update the APT lists and
-ask APT to remove outdated packages from the cache. Then discard the previous archives
-on the host system and copy (move) back the ones from the container:
+distribution / release combination. Just copy the existing archives there, update the
+APT lists and ask APT to remove outdated packages from the cache. Then discard the
+previous archives on the host system and copy (move) back the ones from the container:
 
 In the LXC container:
 
@@ -119,11 +121,11 @@ apt-get autoclean
 On the host system:
 
 ```bash
-sudo -s -H  # not necessary, but allows for tab-completing into the container filesystem
+sudo -s -H  # only required for tab-completing into the container filesystem
 CACHE_BASE=/scratch/cache/localpkgs/debian/8_jessie
 CONTAINER_FS=/scratch/containers/vamp_deb8_mysql/rootfs
 rm $CACHE_BASE/archives/*.deb
-cp  $CONTAINER_FS/var/cache/apt/archives/*.deb $CACHE_BASE/archives/
+cp $CONTAINER_FS/var/cache/apt/archives/*.deb $CACHE_BASE/archives/
 ```
 
 The APT list files can be updated using the last two lines of the commands describing
@@ -131,11 +133,12 @@ how to build up the cache initially.
 
 #### Using The Package Cache
 
-This can either be done globally, using a symlink in the top-level `settings/` directory
-or per suite / configuration (the latter overriding the former in case both are
-present).
+This can either be done in the common `settings/` directory or per configuration (the
+latter overriding the former in case both are being present).
 
-Global setting for all configurations:
+##### Common Cache Settings
+
+Common setting for all configurations:
 
 ```bash
 cd settings
@@ -155,8 +158,11 @@ tree -L 3 -d settings/localpkgs
 #         └── lists
 ```
 
-Using a suite-specific package cache, the symlink is expected to point to the directory
-containing the `archives` and `lists` directories directly (in case of Debian setups):
+##### Configuration-Specific Cache Settings
+
+Using a configuration-specific package cache, the symlink is expected to point to the
+directory containing the `archives` and `lists` directories directly (in case of Debian
+setups):
 
 ```bash
 cd distributions/debian/8_jessie_with_mysql/settings
