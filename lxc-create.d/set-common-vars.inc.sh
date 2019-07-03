@@ -7,6 +7,7 @@ export LC_ALL=C
 
 HOST_DIST=$(lsb_release -i -s)
 HOST_REL=$(lsb_release -r -s)
+HOST_REL_NAME=$(lsb_release -c -s)
 
 BASEDIR="${LXCPATH:-/scratch/containers}"
 TGT_ROOT="$BASEDIR/$VM_HOSTNAME/rootfs"
