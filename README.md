@@ -4,11 +4,11 @@ Scripts and stuff to automatically create [LXC containers][lxc] in various flavo
 
 ## Design
 
-The repository is a collection of modular scripts ("*scriptlets*"), each doing just
-*one* small task. They can be combined to form a *configuration* for a container using
-the `distributions/` directory with the corresponding sub-directories by using symbolic
-links to point to the scriptlets that should be run during setup. A minimal setup could
-look like this:
+The repository is a collection of modular shell script snippets ("*scriptlets*"), each
+doing just *one* small task. They can be combined to form a *configuration* for a
+container using the `distributions/` directory with the corresponding sub-directories by
+using symbolic links to point to the scriptlets that should be run during setup. A
+minimal setup could look like this:
 
 ```text
 distributions/
@@ -35,6 +35,31 @@ distributions/
     ├── debian_defaults.inc.sh
     └── lxc-create-base__8_jessie.sh
 ```
+
+## Concept Of Operation
+
+A new container can be created by running the top-level
+[new-lxc-container.sh](new-lxc-container.sh) script that will verify all necessary
+options are set, read the settings (see below) and eventually launch the corresponding
+(distribution-specific, maybe even release-specific) setup script, e.g.
+[lxc-create-base__8_jessie.sh](distributions/debian/lxc-create-base__8_jessie.sh).
+
+While in general the specific setup script is free to do whatever is required, the
+supplied scripts work essentially in three stages:
+
+1. First, all scriptlets in the corresponding `lxc-create.d/` directory are being
+   processed by sourcing them in alphanumeric order.
+1. Once this has completed, the actual `lxc-create` command is issued that will take the
+   required action(s) to setup a container with the desired distribution and release.
+1. After the container has been created, the scriptlets in `lxc-post-create.d` will be
+   sourced in the same fashion as described above. These scriptlets can be used to
+   install additional packages into the container or to configure specific settings.
+   Please note that they are run from the *host* system, i.e. **not** within the running
+   container (no container is actually started during the execution of the scripts). See
+   the provided scripts for examples on how to affect the container.
+
+In an optional step, finalization scripts and / or data can be copied into the
+container to be executed / used from within the running container.
 
 ## Preparations / Prerequisites
 
