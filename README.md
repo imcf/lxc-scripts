@@ -68,6 +68,15 @@ It is strongly recommended to set up [apt-cacher-ng][acng] on the LXC host to sp
 [configure-apt-cacher-proxy.inc.sh](lxc-post-create.d/configure-apt-cacher-proxy.inc.sh)
 scriptlet during container setup.
 
+### Other Requirements
+
+Obviously, LXC needs to be installed on your system. As these scripts expect to operate
+on Debian or Ubuntu, this can be achieved via
+
+```bash
+apt install -y lxc
+```
+
 ## Settings
 
 A few common settings are configured by placing symlinks in the `settings/` directory.
