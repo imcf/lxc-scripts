@@ -27,3 +27,5 @@ Automatically issued by lxc-scripts."
 EOF
 
 chroot "$TGT_ROOT" "$EATMYDATA" bash $SETUP_SCRIPT
+
+# TODO: install cronjob!
