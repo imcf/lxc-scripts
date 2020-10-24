@@ -28,5 +28,9 @@ git commit -a -m "Initial import of /etc on host '${VM_HOSTNAME}'.
 Automatically issued by lxc-scripts."
 EOF
 
-chroot "$TGT_ROOT" "$EATMYDATA" bash $SETUP_SCRIPT
+# DEBUGGING (disabled by default)
+# echo "--------------------------------------------------------"
+# cat "$TGT_ROOT/$SETUP_SCRIPT"
+# echo "--------------------------------------------------------"
 
+chroot "$TGT_ROOT" "$EATMYDATA" bash $SETUP_SCRIPT
