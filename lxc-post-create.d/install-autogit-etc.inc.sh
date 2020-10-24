@@ -10,13 +10,13 @@ chroot "$TGT_ROOT" "$EATMYDATA" git clone "$SIMPLIFY" /opt/simplify
 cat > "$TGT_ROOT/$SETUP_SCRIPT" << EOF
 REPONAME="autogit-etc-${VM_HOSTNAME}"
 mkdir -pv /var/autogit
-export GIT_DIR=/var/autogit/${REPONAME}.git
+export GIT_DIR=/var/autogit/\${REPONAME}.git
 export GIT_WORK_TREE=/etc
 git init
-chmod go-rx $GIT_DIR
 ls -la $GIT_DIR
+chmod go-rx "\$GIT_DIR"
 
-cd $GIT_WORK_TREE
+cd "\$GIT_WORK_TREE"
 cp -v /opt/simplify/autogit/gitignore.etc .gitignore
 git add .
 git config --global user.name "root (${VM_HOSTNAME})"
