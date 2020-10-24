@@ -47,3 +47,11 @@ if [ -n "$ADD_TO_ETC_HOSTS" ] ; then
     echo -e "\n$ADD_TO_ETC_HOSTS" >> "$TGT_ROOT/etc/hosts"
 fi
 
+# DEBUGGING (disabled by default)
+# echo "--------------------------------------------------------"
+# cat "$TGT_ROOT/etc/postfix/main.cf"
+# echo "--------------------------------------------------------"
+# cat "$TGT_ROOT/etc/aliases"
+# echo "--------------------------------------------------------"
+# cat "$TGT_ROOT/etc/hosts"
+# echo "--------------------------------------------------------"
