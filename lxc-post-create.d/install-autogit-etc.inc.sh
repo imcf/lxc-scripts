@@ -13,14 +13,14 @@ mkdir -pv /var/autogit
 export GIT_DIR=/var/autogit/\${REPONAME}.git
 export GIT_WORK_TREE=/etc
 git init
-ls -la $GIT_DIR
 chmod go-rx "\$GIT_DIR"
 
 cd "\$GIT_WORK_TREE"
 cp -v /opt/simplify/autogit/gitignore.etc .gitignore
-git add .
 git config --global user.name "root (${VM_HOSTNAME})"
 git config --global user.email "root@${VM_HOSTNAME}"
+
+git add .
 git commit -a -m "Initial import of /etc on host '${VM_HOSTNAME}'.
 
 Automatically issued by lxc-scripts."
