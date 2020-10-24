@@ -3,7 +3,8 @@
 # make bash complain if we're accessing any unset variable:
 set -o nounset
 
-POSTFIX_SETTINGS="settings/postfix-relay.inc.sh"
+# the "settings" dir is expected to be in the distribution/suite directory:
+POSTFIX_SETTINGS="$(dirname "$0")/settings/postfix-relay.inc.sh"
 if ! [ -r "$POSTFIX_SETTINGS" ] ; then
     echo "ERROR: unable to read postfix settings file: $POSTFIX_SETTINGS"
     exit 5
