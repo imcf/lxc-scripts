@@ -16,6 +16,8 @@ git init
 chmod go-rx "\$GIT_DIR"
 
 cd "\$GIT_WORK_TREE"
+mkdir cron.d
+cp -v /opt/simplify/autogit/cronjob.autogit-etc cron.d/autogit-etc
 cp -v /opt/simplify/autogit/gitignore.etc .gitignore
 git config --global user.name "root (${VM_HOSTNAME})"
 git config --global user.email "root@${VM_HOSTNAME}"
@@ -28,4 +30,3 @@ EOF
 
 chroot "$TGT_ROOT" "$EATMYDATA" bash $SETUP_SCRIPT
 
-# TODO: install cronjob!
