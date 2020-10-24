@@ -40,3 +40,10 @@ sed "s/^mydestination =.*/mydestination = $VM_HOSTNAME, localhost/" \
 
 # revert to bash's default of not complaining about unset variables:
 set +o nounset
+
+# optionally (and therefore only possible after disabling the "nounset" bash option
+# again) add a line to /etc/hosts:
+if [ -n "$ADD_TO_ETC_HOSTS" ] ; then
+    echo -e "\n$ADD_TO_ETC_HOSTS" >> "$TGT_ROOT/etc/hosts"
+fi
+
