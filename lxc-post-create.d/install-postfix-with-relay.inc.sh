@@ -15,6 +15,7 @@ fi
 chroot "$TGT_ROOT" debconf-set-selections << EOF
 postfix postfix/main_mailer_type string 'Satellite system'
 postfix postfix/mailname string $VM_HOSTNAME
+postfix postfix/destinations string $VM_HOSTNAME, localhost
 postfix postfix/relayhost string $POSTFIX_RELAYHOST
 postfix postfix/root_address $POSTFIX_ROOTADDRESS
 EOF
@@ -31,6 +32,11 @@ EOF
 
 
 chroot "$TGT_ROOT" "$EATMYDATA" apt-get -y install postfix
+
+# the "postfix/destination" setting for debconf seems to be ignored, so we adjust the
+# postfix config manually again:
+sed "s/^mydestination =.*/mydestination = $VM_HOSTNAME, localhost/" \
+    -i "$TGT_ROOT/etc/postfix/main.cf"
 
 # revert to bash's default of not complaining about unset variables:
 set +o nounset
