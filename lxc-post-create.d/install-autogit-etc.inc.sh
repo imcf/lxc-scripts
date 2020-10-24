@@ -7,7 +7,7 @@ chroot "$TGT_ROOT" "$EATMYDATA" apt-get -y install git
 
 chroot "$TGT_ROOT" "$EATMYDATA" git clone "$SIMPLIFY" /opt/simplify
 
-cat > "$TGT_ROOT/$SETUP_SCRIPT" <<< EOF
+cat > "$TGT_ROOT/$SETUP_SCRIPT" << EOF
 REPONAME="autogit-etc-${VM_HOSTNAME}"
 mkdir -pv /var/autogit
 export GIT_DIR=/var/autogit/${REPONAME}.git
