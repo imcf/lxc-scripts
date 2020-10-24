@@ -9,7 +9,7 @@ if ! [ -r "$POSTFIX_SETTINGS" ] ; then
     echo "ERROR: unable to read postfix settings file: $POSTFIX_SETTINGS"
     exit 5
 fi
-. $POSTFIX_SETTINGS
+. "$POSTFIX_SETTINGS"
 
 # prepare installation of packages requiring configuration:
 chroot "$TGT_ROOT" debconf-set-selections << EOF
@@ -31,6 +31,7 @@ root: $POSTFIX_ROOTADDRESS
 EOF
 
 
+# now install the package:
 chroot "$TGT_ROOT" "$EATMYDATA" apt-get -y install postfix
 
 # the "postfix/destination" setting for debconf seems to be ignored, so we adjust the
