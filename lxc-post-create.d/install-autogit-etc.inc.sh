@@ -3,7 +3,7 @@
 SIMPLIFY="https://github.com/ehrenfeu/simplify.git"
 SETUP_SCRIPT="/opt/setup-autogit-etc.sh"
 
-chroot "$TGT_ROOT" "$EATMYDATA" apt-get -y install git
+chroot "$TGT_ROOT" "$EATMYDATA" apt-get -y install git cron
 
 chroot "$TGT_ROOT" "$EATMYDATA" git clone "$SIMPLIFY" /opt/simplify
 
