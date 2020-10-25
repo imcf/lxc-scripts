@@ -16,6 +16,7 @@ git init
 chmod go-rx "\$GIT_DIR"
 
 cd "\$GIT_WORK_TREE"
+echo "\$GIT_DIR" > "\$GIT_WORK_TREE/.autogit_dir"
 mkdir cron.d
 cp -v /opt/simplify/autogit/cronjob.autogit-etc cron.d/autogit-etc
 cp -v /opt/simplify/autogit/gitignore.etc .gitignore
