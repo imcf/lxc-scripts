@@ -14,6 +14,7 @@ fi
 # prepare installation of packages requiring configuration:
 chroot "$TGT_ROOT" debconf-set-selections << EOF
 postfix postfix/main_mailer_type string Satellite system
+postfix postfix/protocols string all
 postfix postfix/mailname string $VM_HOSTNAME
 postfix postfix/destinations string $VM_HOSTNAME, localhost
 postfix postfix/relayhost string $POSTFIX_RELAYHOST
