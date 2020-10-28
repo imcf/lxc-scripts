@@ -49,6 +49,9 @@ chroot "$TGT_ROOT" "$EATMYDATA" apt-get -y install postfix bsd-mailx
 sed "s/^mydestination =.*/mydestination = $VM_HOSTNAME, localhost/" \
     -i "$TGT_ETC/postfix/main.cf"
 
+# tell postfix to actually *use* /etc/mailname
+sed "s/^#myorigin =/myorigin =/" -i "$TGT_ETC/postfix/main.cf"
+
 # revert to bash's default of not complaining about unset variables:
 set +o nounset
 
