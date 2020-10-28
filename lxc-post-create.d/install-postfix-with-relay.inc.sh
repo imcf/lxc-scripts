@@ -3,6 +3,8 @@
 # make bash complain if we're accessing any unset variable:
 set -o nounset
 
+TGT_ETC="$TGT_ROOT/etc"
+
 # the "settings" dir is expected to be in the distribution/suite directory:
 POSTFIX_SETTINGS="$(dirname "$0")/settings/postfix-relay.inc.sh"
 if ! [ -r "$POSTFIX_SETTINGS" ] ; then
@@ -25,7 +27,7 @@ EOF
 # if it doesn't exist (which is usually the case in our stage of the installation), but
 # they don't add the root recipient there - so we simply pre-create the file (which
 # won't be touched by the package's scripts):
-cat > "$TGT_ROOT/etc/aliases" << EOF
+cat > "$TGT_ETC/aliases" << EOF
 # See man 5 aliases for format
 postmaster:    root
 root: $POSTFIX_ROOTADDRESS
@@ -38,7 +40,7 @@ chroot "$TGT_ROOT" "$EATMYDATA" apt-get -y install postfix bsd-mailx
 # the "postfix/destination" setting for debconf seems to be ignored, so we adjust the
 # postfix config manually again:
 sed "s/^mydestination =.*/mydestination = $VM_HOSTNAME, localhost/" \
-    -i "$TGT_ROOT/etc/postfix/main.cf"
+    -i "$TGT_ETC/postfix/main.cf"
 
 # revert to bash's default of not complaining about unset variables:
 set +o nounset
@@ -46,14 +48,14 @@ set +o nounset
 # optionally (and therefore only possible after disabling the "nounset" bash option
 # again) add a line to /etc/hosts:
 if [ -n "$ADD_TO_ETC_HOSTS" ] ; then
-    echo -e "\n$ADD_TO_ETC_HOSTS" >> "$TGT_ROOT/etc/hosts"
+    echo -e "\n$ADD_TO_ETC_HOSTS" >> "$TGT_ETC/hosts"
 fi
 
 # DEBUGGING (disabled by default)
 # echo "--------------------------------------------------------"
-# cat "$TGT_ROOT/etc/postfix/main.cf"
+# cat "$TGT_ETC/postfix/main.cf"
 # echo "--------------------------------------------------------"
-# cat "$TGT_ROOT/etc/aliases"
+# cat "$TGT_ETC/aliases"
 # echo "--------------------------------------------------------"
-# cat "$TGT_ROOT/etc/hosts"
+# cat "$TGT_ETC/hosts"
 # echo "--------------------------------------------------------"
