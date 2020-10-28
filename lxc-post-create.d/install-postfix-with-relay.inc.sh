@@ -33,12 +33,19 @@ postmaster:    root
 root: $POSTFIX_ROOTADDRESS
 EOF
 
+# /etc/mailname is required, otherwise a postfix-relay will reject mails from the
+# container saying "Relay access denied" - NOTE that it doesn't have to be an FQDN,
+# even though that would somehow make more sense...
+echo "$VM_HOSTNAME" > "$TGT_ETC/mailname"
+
 
 # now install the package and also install a command-line "mail" utility:
 chroot "$TGT_ROOT" "$EATMYDATA" apt-get -y install postfix bsd-mailx
 
 # the "postfix/destination" setting for debconf seems to be ignored, so we adjust the
-# postfix config manually again:
+# postfix config manually again.
+# NOTE that "mydestination" MUST include what is set in /etc/mailname, otherwise postfix
+# will ignore things like /etc/aliases (and probably other stuff)
 sed "s/^mydestination =.*/mydestination = $VM_HOSTNAME, localhost/" \
     -i "$TGT_ETC/postfix/main.cf"
 
