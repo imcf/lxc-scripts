@@ -32,8 +32,8 @@ root: $POSTFIX_ROOTADDRESS
 EOF
 
 
-# now install the package:
-chroot "$TGT_ROOT" "$EATMYDATA" apt-get -y install postfix
+# now install the package and also install a command-line "mail" utility:
+chroot "$TGT_ROOT" "$EATMYDATA" apt-get -y install postfix bsd-mailx
 
 # the "postfix/destination" setting for debconf seems to be ignored, so we adjust the
 # postfix config manually again:
