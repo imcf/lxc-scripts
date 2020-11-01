@@ -18,6 +18,8 @@ chmod go-rx "\$GIT_DIR"
 cd "\$GIT_WORK_TREE"
 echo "\$GIT_DIR" > "\$GIT_WORK_TREE/.autogit_dir"
 mkdir cron.d
+mkdir _admin
+touch _admin/dpkg__get-selections
 cp -v /opt/simplify/autogit/cronjob.autogit-etc cron.d/autogit-etc
 cp -v /opt/simplify/autogit/gitignore.etc .gitignore
 git config --global user.name "root (${VM_HOSTNAME})"
