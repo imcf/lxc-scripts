@@ -20,17 +20,7 @@ postfix postfix/protocols string all
 postfix postfix/mailname string $VM_HOSTNAME
 postfix postfix/destinations string $VM_HOSTNAME, localhost
 postfix postfix/relayhost string $POSTFIX_RELAYHOST
-postfix postfix/root_address $POSTFIX_ROOTADDRESS
-EOF
-
-# for whatever reason, the postfix debian package setup scripts will create /etc/aliases
-# if it doesn't exist (which is usually the case in our stage of the installation), but
-# they don't add the root recipient there - so we simply pre-create the file (which
-# won't be touched by the package's scripts):
-cat > "$TGT_ETC/aliases" << EOF
-# See man 5 aliases for format
-postmaster:    root
-root: $POSTFIX_ROOTADDRESS
+postfix postfix/root_address string $POSTFIX_ROOTADDRESS
 EOF
 
 # /etc/mailname is required, otherwise a postfix-relay will reject mails from the
