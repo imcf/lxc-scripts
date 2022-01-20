@@ -114,6 +114,12 @@ ln -s /scratch/containers lxcpath
 cd -
 ```
 
+Most likely you would also want to set LXC's configuration accordingly:
+
+```bash
+echo "lxc.lxcpath = /scratch/containers" >> /etc/lxc/lxc.conf
+```
+
 ### Local Package Cache
 
 In addition to using Apt-Cacher-NG it is also supported to use a local package cache
