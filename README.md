@@ -80,6 +80,24 @@ apt install -y \
     debootstrap
 ```
 
+### Debian Release Key Issue
+
+On recent Debian and Ubuntu systems (seems to be a bug in the `lxc` package) the release
+signing key shipped is outdated and needs to be updated before Debian 9 and 10
+containers can be installed:
+
+```bash
+# check registered keys:
+gpg --no-default-keyring --keyring /var/cache/lxc/debian/archive-key.gpg --list-key
+
+# get the release key for Debian 10 and register it:
+wget https://ftp-master.debian.org/keys/release-10.asc
+gpg --no-default-keyring --keyring /var/cache/lxc/debian/archive-key.gpg --import release-10.asc
+
+# check registered keys again, this should now contain the new key as well:
+gpg --no-default-keyring --keyring /var/cache/lxc/debian/archive-key.gpg --list-key
+```
+
 ## Settings
 
 A few common settings are configured by placing symlinks in the `settings/` directory.
