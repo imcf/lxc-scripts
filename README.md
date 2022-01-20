@@ -74,7 +74,10 @@ Obviously, LXC needs to be installed on your system. As these scripts expect to 
 on Debian or Ubuntu, this can be achieved via
 
 ```bash
-apt install -y lxc
+apt install -y \
+    lxc \
+    lxc-templates \
+    debootstrap
 ```
 
 ## Settings
