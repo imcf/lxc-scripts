@@ -92,7 +92,9 @@ gpg --no-default-keyring --keyring /var/cache/lxc/debian/archive-key.gpg --list-
 
 # get the release key for Debian 10 and register it:
 wget https://ftp-master.debian.org/keys/release-10.asc
+wget https://ftp-master.debian.org/keys/release-11.asc
 gpg --no-default-keyring --keyring /var/cache/lxc/debian/archive-key.gpg --import release-10.asc
+gpg --no-default-keyring --keyring /var/cache/lxc/debian/archive-key.gpg --import release-11.asc
 
 # check registered keys again, this should now contain the new key as well:
 gpg --no-default-keyring --keyring /var/cache/lxc/debian/archive-key.gpg --list-key
