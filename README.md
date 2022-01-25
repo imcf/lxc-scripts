@@ -82,9 +82,9 @@ apt install -y \
 
 ### Debian Release Key Issue
 
-On recent Debian and Ubuntu systems (seems to be a bug in the `lxc` package) the release
-signing key shipped is outdated and needs to be updated before Debian 9 and 10
-containers can be installed:
+On recent Debian and Ubuntu systems the release signing key shipped needs to be updated
+before Debian 9 and 10 containers can be installed (actually it's a bug in the template
+script `/usr/share/lxc/templates/lxc-debian` downloading an outdated key):
 
 ```bash
 # check registered keys:
