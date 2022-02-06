@@ -4,6 +4,6 @@
 TGT_SOURCESLIST="$TGT_ROOT"/etc/apt/sources.list
 echo > "$TGT_SOURCESLIST"
 
-for CUR_SUITE in "$SUITE $SUITE-updates $SUITE-security" ; do
+for CUR_SUITE in "$SUITE" "$SUITE-updates" "$SUITE-security" ; do
     echo "deb $MIRROR $CUR_SUITE main restricted universe multiverse" >> "$TGT_SOURCESLIST"
 done
