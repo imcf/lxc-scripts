@@ -2,4 +2,6 @@
 
 # set up sources.list for APT
 
-echo "deb $MIRROR $SUITE main universe multiverse" > "$TGT_ROOT"/etc/apt/sources.list
+for CUR_SUITE in "$SUITE $SUITE-updates $SUITE-security" ; do
+    echo "deb $MIRROR $CUR_SUITE main universe multiverse" >> "$TGT_ROOT"/etc/apt/sources.list
+done
