@@ -72,4 +72,5 @@ if [ -r "$POSTFIX_SETTINGS" ]; then
     postfix_with_relay
 else
     echo "Setting up postfix in LOCAL-ONLY mode."
+    postfix_local_only
 fi
