@@ -13,4 +13,5 @@ BASEDIR="${LXCPATH:-/scratch/containers}"
 TGT_ROOT="$BASEDIR/$VM_HOSTNAME/rootfs"
 TGT_LOCALE="en_US.UTF-8"
 
-BRIDGE_IP=$(ip -o -f inet addr show lxcbr0 | sed -n 's,.*inet \([0-9\.]*\)/.*,\1,p')
+BRIDGE_DEV="${LXC_BRIDGE_DEV:-lxcbr0}"
+BRIDGE_IP=$(ip -o -f inet addr show "$BRIDGE_DEV" | sed -n 's,.*inet \([0-9\.]*\)/.*,\1,p')

@@ -81,6 +81,9 @@ else
     echo "WARNING: no 'settings/lxcpath' found, using LXC default!"
 fi
 
+LXC_BRIDGE_DEV="${LXC_BRIDGE_DEV:-$(cat settings/bridge_device)}"
+echo "LXC_BRIDGE_DEV=$LXC_BRIDGE_DEV"
+export LXC_BRIDGE_DEV
 
 RUN_SCRIPT="$SETUP_SCRIPTS/lxc-create-base.sh"
 echo -e "----------------------------------\\nLaunching [$RUN_SCRIPT]"
